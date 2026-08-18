@@ -1,0 +1,32 @@
+# Hourly travel-time logger. GitHub's cron can drift a few minutes under
+# load; that is fine, the CSV records the true UTC timestamp per row.
+name: log-traveltimes
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch: {}      # manual run button, for the first smoke test
+
+permissions:
+  contents: write
+
+concurrency:
+  group: logger              # never let two runs race the same CSV
+  cancel-in-progress: false
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: log one sample per pair
+        env:
+          TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
+        run: python3 log_traveltimes.py
+      - name: commit the new rows
+        run: |
+          git config user.name "traveltime-logger"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/
+          git commit -m "log $(date -u +%FT%H:%MZ)" || exit 0
+          git pull --rebase
+          git push
