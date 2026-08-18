@@ -36,7 +36,11 @@ def query(key, frm, to):
         "key": key, "traffic": "true", "travelMode": "car",
         "routeType": "fastest", "computeTravelTimeFor": "all"})
     url = f"{API}/{locs}/json?{params}"
-    with urllib.request.urlopen(url, timeout=60) as r:
+    # TomTom's edge rejects requests with no User-Agent (urllib sends none by
+    # default), which is why the Actions runner saw every call fail while the
+    # same key worked from a browser and curl. Send a plain identifying UA.
+    req = urllib.request.Request(url, headers={"User-Agent": "portland-traveltime-log/1.0"})
+    with urllib.request.urlopen(req, timeout=60) as r:
         body = json.load(r)
     return body["routes"][0]["summary"]
 
@@ -69,9 +73,23 @@ def main():
                 "status": "ok"})
         except Exception as e:                       # log the failure as a row
             failures += 1
+            detail = type(e).__name__
+            code = getattr(e, "code", None)
+            if code:
+                detail += f"_http{code}"
+            body = ""
+            if hasattr(e, "read"):                    # HTTPError carries a body
+                try:
+                    body = e.read().decode("utf-8", "replace")[:200]
+                except Exception:
+                    pass
+            # print the first failure's detail so the Actions log shows the
+            # real cause instead of just a count
+            if failures == 1:
+                print(f"first failure on {p['id']}: {detail} {body}")
             row.update({"travel_s": "", "no_traffic_s": "", "historic_s": "",
                         "delay_s": "", "length_m": "",
-                        "status": f"error:{type(e).__name__}"})
+                        "status": f"error:{detail}"})
         rows.append(row)
         time.sleep(1)                                # stay far under rate limits
 
