@@ -1,0 +1,17 @@
+{
+  "comment": "Fixed OD pairs logged hourly. Frozen BEFORE the Sept 11 2026 I-5 SB Rose Quarter closure so the before-baseline and the during-closure data are collected identically. Do not edit pairs after logging begins; add new ones with new ids instead.",
+  "pairs": [
+    {"id": "i5sb_span",     "from": [45.6060, -122.6871], "to": [45.5081, -122.6608], "name": "Delta Park -> OMSI",                          "why": "a trip that normally uses the closed I-5 SB span; its travel-time jump is the closure cost"},
+    {"id": "vanc_pdx",      "from": [45.6262, -122.6751], "to": [45.5189, -122.6794], "name": "Vancouver WA -> Pioneer Courthouse Sq",      "why": "the classic I-5 SB commute through the closed span"},
+    {"id": "i5sb_detour",   "from": [45.5768, -122.6820], "to": [45.5119, -122.6843], "name": "Rosa Parks/I-5 -> PSU",                      "why": "should divert to the signed I-405 detour during the closure; length_m jumps reveal the reroute"},
+    {"id": "interstate_sb", "from": [45.5830, -122.6819], "to": [45.5346, -122.6740], "name": "Kenton -> Broadway Bridge east",             "why": "N Interstate Ave, the surface street parallel to closed I-5"},
+    {"id": "williams_nb",   "from": [45.5346, -122.6740], "to": [45.5830, -122.6819], "name": "Broadway Bridge east -> Kenton",             "why": "reverse of interstate_sb (Williams/Vancouver couplet), direction control"},
+    {"id": "mlk_sb",        "from": [45.5830, -122.6620], "to": [45.5190, -122.6608], "name": "NE Columbia/MLK -> SE Stark/Grand",          "why": "MLK Blvd southbound, the eastside surface alternative"},
+    {"id": "grand_nb",      "from": [45.5190, -122.6608], "to": [45.5830, -122.6620], "name": "SE Stark/Grand -> NE Columbia/MLK",          "why": "reverse couplet (Grand Ave northbound), direction control"},
+    {"id": "i205_sb",       "from": [45.5749, -122.5655], "to": [45.4890, -122.5665], "name": "Airport Way -> Foster via I-205",            "why": "the regional detour; redundant with PORTAL detectors on purpose, cross-checks the logger"},
+    {"id": "i84wb_feeder",  "from": [45.5310, -122.5780], "to": [45.5316, -122.6668], "name": "NE 82nd/I-84 -> Moda Center",                "why": "I-84 WB approach; the WB-to-SB movement closes, so this feeder congests"},
+    {"id": "powell_wb",     "from": [45.4977, -122.5789], "to": [45.5015, -122.6685], "name": "SE 82nd/Powell -> Ross Island Bridge",       "why": "the project's validation corridor; may absorb eastside diversion"},
+    {"id": "ctrl_west",     "from": [45.4515, -122.7817], "to": [45.5229, -122.9898], "name": "Washington Square -> Hillsboro",             "why": "far-field control, should NOT move with the closure"},
+    {"id": "ctrl_se",       "from": [45.5023, -122.4416], "to": [45.4790, -122.5670], "name": "Gresham -> Lents",                           "why": "far-field control on the east side"}
+  ]
+}
