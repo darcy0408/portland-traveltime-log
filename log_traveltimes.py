@@ -59,6 +59,25 @@ def main():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     new_file = not os.path.exists(out)
 
+    # HOUR GUARD (added Aug 27 2026, dated by this repo's own history): on
+    # Aug 26 GitHub's scheduler began starving the single hourly cron slot.
+    # Every run that fired completed clean; most hours simply never fired
+    # (Aug 26 logged 5 of 14 daytime hours). The workflow therefore now
+    # carries several cron entries per hour as redundancy, and this guard
+    # keeps the DATA DEFINITION unchanged: at most one row set per UTC hour.
+    # Whichever scheduled run fires first in an hour logs it; any later run
+    # in the same hour exits here, before touching the API. Rows are
+    # appended chronologically, so checking the last row is sufficient.
+    if not new_file:
+        with open(out, newline="") as f:
+            last = None
+            for last in csv.DictReader(f):
+                pass
+        if last and last["utc"][:13] == stamp[:13]:
+            print(f"{stamp}: this hour is already logged ({last['utc']}); "
+                  f"exiting without querying")
+            return
+
     rows, failures = [], 0
     for p in pairs:
         row = {"utc": stamp, "pair": p["id"]}

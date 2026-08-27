@@ -1,10 +1,17 @@
 # Hourly travel-time logger. GitHub's cron can drift a few minutes under
 # load; that is fine, the CSV records the true UTC timestamp per row.
+#
+# Three cron entries per hour (added Aug 27 2026): on Aug 26 GitHub's
+# scheduler began starving the single hourly slot (runs that fired completed
+# clean in ~25 s; most hours never fired at all, Aug 26 logged 5 of 14
+# daytime hours). The extra entries are pure redundancy against scheduler
+# starvation; an hour guard in log_traveltimes.py keeps the data definition
+# unchanged at most ONE row set per UTC hour, whichever run fires first.
 name: log-traveltimes
 on:
   schedule:
-    - cron: "7 * * * *"
-  workflow_dispatch: {}      # manual run button, for the first smoke test
+    - cron: "7,24,41 * * * *"
+  workflow_dispatch: {}      # manual run button, for smoke tests and gap fill
 
 permissions:
   contents: write
