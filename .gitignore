@@ -1,0 +1,4 @@
+# Python bytecode cache. Created locally whenever log_traveltimes.py is imported
+# as a module (e.g. to test the hour guard); never produced by the Actions
+# runner, which runs the script directly and stages only data/.
+__pycache__/
