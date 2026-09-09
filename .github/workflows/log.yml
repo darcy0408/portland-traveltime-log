@@ -1,16 +1,31 @@
 # Hourly travel-time logger. GitHub's cron can drift a few minutes under
 # load; that is fine, the CSV records the true UTC timestamp per row.
 #
-# Three cron entries per hour (added Aug 27 2026): on Aug 26 GitHub's
-# scheduler began starving the single hourly slot (runs that fired completed
-# clean in ~25 s; most hours never fired at all, Aug 26 logged 5 of 14
-# daytime hours). The extra entries are pure redundancy against scheduler
-# starvation; an hour guard in log_traveltimes.py keeps the data definition
-# unchanged at most ONE row set per UTC hour, whichever run fires first.
+# Six cron entries per hour (three added Aug 27 2026, doubled to six Sept 9
+# 2026): on Aug 26 GitHub's scheduler began starving the single hourly slot
+# (runs that fired completed clean in ~25 s; most hours never fired at all,
+# Aug 26 logged 5 of 14 daytime hours). The extra entries are pure redundancy
+# against scheduler starvation; an hour guard in log_traveltimes.py keeps the
+# data definition unchanged at most ONE row set per UTC hour, whichever run
+# fires first.
+#
+# Sept 9 2026, measured and disclosed BEFORE the Sept 11 closure, so this
+# change precedes any contact with closure data. The three Aug 27 slots did
+# not cure the starvation. Over Sept 1-8, GitHub's own cron delivered only
+# 32% of daytime hours (3 to 5 of 14 per day); the remaining 68% exist only
+# because a local Windows task pings `gh workflow run` at :52, last in the
+# hour, so every hour it delivered is an hour all three cron slots missed.
+# That made an unattended PC a single point of failure for irreplaceable
+# closure data. Two changes were made that day: the local task's
+# battery-stop conditions were cleared, and these slots went from 3 to 6,
+# spaced ~8 min apart and all BEFORE :52 so the pinger stays the backstop
+# rather than the primary. Neither touches the data definition: the hour
+# guard returns before querying the API, so extra slots add no rows and no
+# API calls, and `concurrency: logger` serializes runs so they cannot race.
 name: log-traveltimes
 on:
   schedule:
-    - cron: "7,24,41 * * * *"
+    - cron: "3,11,19,27,35,43 * * * *"
   workflow_dispatch: {}      # manual run button, for smoke tests and gap fill
 
 permissions:
