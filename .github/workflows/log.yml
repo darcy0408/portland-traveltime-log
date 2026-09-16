@@ -22,6 +22,12 @@
 # rather than the primary. Neither touches the data definition: the hour
 # guard returns before querying the API, so extra slots add no rows and no
 # API calls, and `concurrency: logger` serializes runs so they cannot race.
+#
+# Sept 15 2026 re-measure, after the closure began: over Sept 9-15, with the
+# six slots above, GitHub's cron delivered about 30% of scored-window hours
+# (06:00-19:59 PT) and the local pinger about 70% (Sept 9-13, complete days:
+# 30.0% / 70.0%); this is an observed trigger-share measurement only and
+# changes no cron slot, no data definition, and no scoring rule.
 name: log-traveltimes
 on:
   schedule:
