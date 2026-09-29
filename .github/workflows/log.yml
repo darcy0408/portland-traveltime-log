@@ -28,6 +28,33 @@
 # (06:00-19:59 PT) and the local pinger about 70% (Sept 9-13, complete days:
 # 30.0% / 70.0%); this is an observed trigger-share measurement only and
 # changes no cron slot, no data definition, and no scoring rule.
+#
+# Sept 28 2026 (Pacific date; the commit is stamped Sept 29 UTC), disclosed
+# during the closure, after the fact: two trigger changes made during
+# collection that the paragraphs above do not describe
+# (they stay as written). (1) Since Sept 14 the local Windows task fires
+# twice an hour, at :20 and :52 (first :20 dispatch 2026-09-15 00:20Z), so
+# ":52, last in the hour" above is out of date. (2) Since 2026-09-16 01:11Z
+# (Sept 15, 18:11 PDT) a Cloudflare Worker, "logger-watchdog", requests a
+# workflow_dispatch at :50 UTC every hour and sends a private alert if that
+# dispatch fails or a scored-window hour has no rows. It never writes to
+# this repository: like every trigger it only starts this workflow, and the
+# hour guard still keeps at most one row set per UTC hour. Measured on runs
+# and rows before 2026-09-28 23:00Z (snapshot commit db6c328, the first
+# after that cutoff) from GitHub's run records and this repository's commits
+# (each data commit falls inside exactly one run): all 179 scored-window
+# hours from 02:00Z Sept 16 were first recorded by dispatch runs created at
+# :20-:21 (161) or by scheduled runs (18); every dispatch run created at
+# :50-:51 (308) exited at the hour guard. The PC task and the Worker share
+# one GitHub account, so which caller made a dispatch is INFERRED from its
+# creation minute; on that inference no hour was first recorded by a
+# Worker-triggered run, and the records cannot make that certain. The :20
+# slot moved the typical sample from about :49 to about :20 past the hour
+# between the preregistration's before and during pools; the rules are
+# unchanged and that shift is disclosed, not corrected. No closure-period
+# scoring output or record of scoring was found in the materials reviewed.
+# Registered as Appendix Q addendum 5 in the ABM repository's
+# PREREG_I5_ROSEQUARTER.md.
 name: log-traveltimes
 on:
   schedule:
