@@ -55,6 +55,16 @@
 # scoring output or record of scoring was found in the materials reviewed.
 # Registered as Appendix Q addendum 5 in the ABM repository's
 # PREREG_I5_ROSEQUARTER.md.
+#
+# Sept 28 2026, later the same evening (commit stamped Sept 29 UTC), source
+# clarification, existing text preserved: the Worker deployment time above,
+# 2026-09-16 01:11Z, comes from the maintainer's private session notes (Sept
+# 25 entry). The earliest Cloudflare deployment entry retained on Sept 28 is
+# 01:29:08Z, so the 01:11Z time, and addendum 5's "nine minutes after
+# deployment" for the 01:20 dispatch, are not independently confirmed by the
+# retained deployment records. The audited window starts 02:00Z, after both
+# times; no count, cutoff, or rule changes. See the addendum's source
+# clarification.
 name: log-traveltimes
 on:
   schedule:
