@@ -13,8 +13,9 @@ times; live map services show them and throw them away. The agent-based model
 at [portland-traffic-abm](https://github.com/darcy0408/portland-traffic-abm)
 makes pre-registered predictions about how closure traffic redistributes onto
 surface streets, and those predictions can only be graded against data that
-starts **before** the closure. This repository is that before-baseline, and
-its commit history is the provable timestamp.
+starts **before** the closure. This repository is that before-baseline and,
+since the closure began on September 11, the during-closure record; its
+commit history is the provable timestamp.
 
 ## What is logged
 
@@ -37,4 +38,8 @@ can be separated from region-wide drift (weather, season, API changes).
 
 The workflow needs one repository secret, `TOMTOM_API_KEY` (a free
 developer.tomtom.com key). Without it every run fails loudly. The
-`workflow_dispatch` button on the Actions tab runs a manual smoke test.
+`workflow_dispatch` trigger serves manual smoke tests and, since GitHub's
+cron began skipping hours in late August, the external pingers that back it
+up; every trigger change is dated and disclosed in the comments at the top
+of `.github/workflows/log.yml`. An hour guard keeps at most one row set per
+UTC hour whichever trigger fires first.
